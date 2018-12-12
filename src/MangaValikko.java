@@ -8,12 +8,12 @@
  *
  * @author lentt
  */
-public class Etusivu extends javax.swing.JFrame {
+public class MangaValikko extends javax.swing.JFrame {
 
     /**
-     * Creates new form Etusivu
+     * Creates new form MangaValikko
      */
-    public Etusivu() {
+    public MangaValikko() {
         initComponents();
     }
 
@@ -26,41 +26,21 @@ public class Etusivu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btManga = new javax.swing.JButton();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        btManga.setText("Manga");
-        btManga.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btMangaActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(btManga, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(266, Short.MAX_VALUE))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addComponent(btManga, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(232, Short.MAX_VALUE))
+            .addGap(0, 300, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btMangaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMangaActionPerformed
-         new MangaValikko().setVisible(true);
-            this.setVisible(false);
-    }//GEN-LAST:event_btMangaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,25 +59,24 @@ public class Etusivu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Etusivu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MangaValikko.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Etusivu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MangaValikko.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Etusivu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MangaValikko.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Etusivu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MangaValikko.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Etusivu().setVisible(true);
+                new MangaValikko().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btManga;
     // End of variables declaration//GEN-END:variables
 }
