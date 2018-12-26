@@ -1,20 +1,45 @@
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author lentt
  */
 public class MangaValikko extends javax.swing.JFrame {
 
+    JDBCMgKirjasto dbMgki = new JDBCMgKirjasto();// Luo uuden tietokantayhteyden nimeltä dbMgKi MgKirjasto.db tietokantaan. 
+
+    /* JDBCManga dbMg = new JDBCManga();// Luo uuden tietokantayhteyden nimeltä dbMg Manga.db tietokantaan.
+    JDBCMgTekija dbMgte = new JDBCMgTekija();// Luo uuden tietokantayhteyden nimeltä dbMgte MgTekija.db tietokantaan. 
+    JDBCMgKustantaja dbMgku = new JDBCMgKustantaja();// Luo uuden tietokantayhteyden nimeltä dbku Kustantaja.db tietokantaan.
+     */
     /**
      * Creates new form MangaValikko
      */
-    public MangaValikko() {
+    public MangaValikko() throws ClassNotFoundException, SQLException {
+        System.out.println("Alkaa");
         initComponents();
+        System.out.println("Alkaa2");
+        tableload(MangaTaulukko);
+        System.out.println("Alkaa3");
+        //Tyhjennetään tekstikentät
+        clear();
+        idloadMgKi(KenttaIDKirjasto);
+        System.out.println("Alkaa4");
+
     }
 
     /**
@@ -28,18 +53,18 @@ public class MangaValikko extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         MangaTaulukko = new javax.swing.JTable();
-        KirjastoIDKentta = new javax.swing.JTextField();
-        MgNimiKentta = new javax.swing.JTextField();
-        MgTekijaKentta = new javax.swing.JTextField();
+        KenttaIDKirjasto = new javax.swing.JTextField();
+        KenttaMgNimi = new javax.swing.JTextField();
+        KenttaMgTekija = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        MgKustantajaKentta = new javax.swing.JTextField();
+        KenttaMgKustantaja = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        KenttaMgNro = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        MgNroKentta = new javax.swing.JTextField();
+        KenttaMgKieli = new javax.swing.JTextField();
         MgLisaaNappi = new javax.swing.JButton();
         MgPaivitaNappi = new javax.swing.JButton();
         MgPoistaNappi = new javax.swing.JButton();
@@ -48,16 +73,23 @@ public class MangaValikko extends javax.swing.JFrame {
 
         MangaTaulukko.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "KirjastoID", "Manga", "Tekijä", "Kustantaja", "Nro", "Kieli"
             }
         ));
+        MangaTaulukko.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MangaTaulukkoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(MangaTaulukko);
+
+        KenttaIDKirjasto.setEditable(false);
 
         jLabel1.setText("Kirjasto ID");
 
@@ -67,15 +99,15 @@ public class MangaValikko extends javax.swing.JFrame {
 
         jLabel4.setText("Kustantaja:");
 
-        MgKustantajaKentta.addActionListener(new java.awt.event.ActionListener() {
+        KenttaMgKustantaja.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MgKustantajaKenttaActionPerformed(evt);
+                KenttaMgKustantajaActionPerformed(evt);
             }
         });
 
-        jLabel5.setText("Kieli:");
+        jLabel5.setText("Nro:");
 
-        jLabel6.setText("Numero:");
+        jLabel6.setText("Kieli:");
 
         MgLisaaNappi.setText("Lisää");
         MgLisaaNappi.addActionListener(new java.awt.event.ActionListener() {
@@ -85,94 +117,171 @@ public class MangaValikko extends javax.swing.JFrame {
         });
 
         MgPaivitaNappi.setText("Päivitä");
+        MgPaivitaNappi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MgPaivitaNappiActionPerformed(evt);
+            }
+        });
 
         MgPoistaNappi.setText("Poista");
+        MgPoistaNappi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MgPoistaNappiActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel3)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(KirjastoIDKentta)
-                            .addComponent(MgNimiKentta)
-                            .addComponent(MgTekijaKentta)
-                            .addComponent(MgKustantajaKentta)
-                            .addComponent(MgNroKentta)
-                            .addComponent(jTextField1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel6))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(MgLisaaNappi, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(MgPaivitaNappi)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(MgPoistaNappi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(54, 54, 54)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45))))
+                        .addComponent(MgLisaaNappi, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(MgPaivitaNappi, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(MgPoistaNappi))
+                    .addComponent(KenttaMgKieli)
+                    .addComponent(KenttaMgNro)
+                    .addComponent(KenttaMgKustantaja)
+                    .addComponent(KenttaMgTekija)
+                    .addComponent(KenttaMgNimi)
+                    .addComponent(KenttaIDKirjasto))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 736, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(35, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap(92, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(KirjastoIDKentta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(KenttaIDKirjasto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(MgNimiKentta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(KenttaMgNimi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(MgTekijaKentta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(KenttaMgTekija, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(MgKustantajaKentta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(KenttaMgKustantaja, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(KenttaMgNro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(MgNroKentta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(8, 8, 8)
+                        .addComponent(KenttaMgKieli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(MgPaivitaNappi)
                             .addComponent(MgLisaaNappi)
-                            .addComponent(MgPoistaNappi)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26))
+                            .addComponent(MgPaivitaNappi)
+                            .addComponent(MgPoistaNappi))))
+                .addGap(49, 49, 49))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void MgKustantajaKenttaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MgKustantajaKenttaActionPerformed
+    private void KenttaMgKustantajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KenttaMgKustantajaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MgKustantajaKenttaActionPerformed
+    }//GEN-LAST:event_KenttaMgKustantajaActionPerformed
 
     private void MgLisaaNappiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MgLisaaNappiActionPerformed
         // Manga kirjaston lisää nappi toiminnot
-        
+        try {
+            System.out.println("Alkaa2");
+            //Lisätään tiedot tietokantaan
+            dbMgki.putData("INSERT INTO MgKirjasto(IDMANGAKIRJASTO,MANGA,MGTEKIJA,MGKUSTANTAJA,NRO,KIELI) "
+                    + "values('" + KenttaIDKirjasto.getText() + "','" + KenttaMgNimi.getText() + "','" + KenttaMgTekija.getText()
+                    + "','" + KenttaMgKustantaja.getText() + "','" + KenttaMgKieli.getText() + "','" + KenttaMgNro.getText() + "')");
+            System.out.println("Alkaa6");
+            //Päivitetään taulukko, jotta uusimmat muutokset näkyvät
+            tableload(MangaTaulukko);
+            //Tyhjennetään tekstikentät
+            clear();
+            //Päivitetään id-kenttään uusi viimeisin id
+            idloadMgKi(KenttaIDKirjasto);
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MangaValikko.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MangaValikko.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_MgLisaaNappiActionPerformed
+
+    private void MgPaivitaNappiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MgPaivitaNappiActionPerformed
+        // Manga kirjaston Päivitä nappi toiminnot
+        try {
+            //Päivitetään viimeisimmät muutokset tietokantaan
+            dbMgki.putData("update MgKirjasto set MANGA='" + KenttaMgNimi.getText() + "',MGTEKIJA='" + KenttaMgTekija.getText() + "',MGKUSTANTAJA='"
+                    + KenttaMgKustantaja.getText() + "',NRO='" + KenttaMgKieli.getText() + "',KIELI='" + KenttaMgNro.getText() + "' where IDMANGAKIRJASTO='" + KenttaIDKirjasto.getText() + "'");
+            //Tyhjennetään tekstikentät
+            clear();
+            //Päivitetään taulukko, jotta uusimmat muutokset näkyvät
+            tableload(MangaTaulukko);
+            //Päivitetään id-kenttään uusi viimeisin id
+            idloadMgKi(KenttaIDKirjasto);
+            //Päivitetään valinta combo
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MangaValikko.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MangaValikko.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_MgPaivitaNappiActionPerformed
+
+    private void MgPoistaNappiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MgPoistaNappiActionPerformed
+        // Manga kirjaston Päivitä nappi toiminnot
+        try {
+            //Poistetaan tieto tietokannasta
+            dbMgki.putData("delete from MgKirjasto where IDMANGAKIRJASTO='" + KenttaIDKirjasto.getText() + "'");
+            //Tyhjennetään tekstikentät
+            clear();
+            //Päivitetään taulukko, jotta uusimmat muutokset näkyvät
+            tableload(MangaTaulukko);
+            //Päivitetään id-kenttään uusi viimeisin id
+            idloadMgKi(KenttaIDKirjasto);
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MangaValikko.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MangaValikko.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_MgPoistaNappiActionPerformed
+
+    private void MangaTaulukkoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MangaTaulukkoMouseClicked
+        //Klikkaamalla taulukkossa jotakin tietoa ne päivittyvät tekstikenttiin
+        //Valitun tiedon id (paikka 0) lisätään id-tekstikenttään
+        KenttaIDKirjasto.setText(String.valueOf(MangaTaulukko.getValueAt(MangaTaulukko.getSelectedRow(), 0)));
+        //Valitun tiedon nimi (paikka 1) lisätään nimi-tekstikenttään
+        KenttaMgNimi.setText(String.valueOf(MangaTaulukko.getValueAt(MangaTaulukko.getSelectedRow(), 1)));
+        //Valitun tiedon tekijä (paikka 2) lisätään tekijä-tekstikenttään
+        KenttaMgTekija.setText(String.valueOf(MangaTaulukko.getValueAt(MangaTaulukko.getSelectedRow(), 2)));
+        //Valitun tiedon Nro (paikka 3) lisätään Kustantaja-tekstikenttään
+        KenttaMgKustantaja.setText(String.valueOf(MangaTaulukko.getValueAt(MangaTaulukko.getSelectedRow(), 3)));
+        //Valitun tiedon Nro (paikka 3) lisätään Nro-tekstikenttään
+        KenttaMgKieli.setText(String.valueOf(MangaTaulukko.getValueAt(MangaTaulukko.getSelectedRow(), 4)));
+        //Valitun tiedon Nro (paikka 3) lisätään Kieli-tekstikenttään
+        KenttaMgNro.setText(String.valueOf(MangaTaulukko.getValueAt(MangaTaulukko.getSelectedRow(), 5)));
+    }//GEN-LAST:event_MangaTaulukkoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -204,21 +313,28 @@ public class MangaValikko extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MangaValikko().setVisible(true);
+                try {
+                    new MangaValikko().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(MangaValikko.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(MangaValikko.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField KirjastoIDKentta;
+    private javax.swing.JTextField KenttaIDKirjasto;
+    private javax.swing.JTextField KenttaMgKieli;
+    private javax.swing.JTextField KenttaMgKustantaja;
+    private javax.swing.JTextField KenttaMgNimi;
+    private javax.swing.JTextField KenttaMgNro;
+    private javax.swing.JTextField KenttaMgTekija;
     private javax.swing.JTable MangaTaulukko;
-    private javax.swing.JTextField MgKustantajaKentta;
     private javax.swing.JButton MgLisaaNappi;
-    private javax.swing.JTextField MgNimiKentta;
-    private javax.swing.JTextField MgNroKentta;
     private javax.swing.JButton MgPaivitaNappi;
     private javax.swing.JButton MgPoistaNappi;
-    private javax.swing.JTextField MgTekijaKentta;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -226,6 +342,45 @@ public class MangaValikko extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+    private void clear() {
+        //Tyhjennetään teksti kentät
+        KenttaIDKirjasto.setText(null);
+        KenttaMgNimi.setText(null);
+        KenttaMgTekija.setText(null);
+        KenttaMgKustantaja.setText(null);
+        KenttaMgKieli.setText(null);
+        KenttaMgNro.setText(null);
+    }
+
+    private void tableload(JTable jt) throws ClassNotFoundException, SQLException {
+        DefaultTableModel dt = (DefaultTableModel) jt.getModel();
+        //Asetetaan rivit aloittamaan 0
+        dt.setRowCount(0);
+        //Haetaan tiedot tietokannasta ja lisätään ne taulukkoon
+        ResultSet rset = dbMgki.getData("SELECT * FROM MgKirjasto");
+
+        while (rset.next()) {
+            Vector v = new Vector();
+            v.add(rset.getString(1));
+            v.add(rset.getString(2));
+            v.add(rset.getString(3));
+            v.add(rset.getString(4));
+            v.add(rset.getString(5));
+            v.add(rset.getString(6));
+            dt.addRow(v);
+        }
+    }
+
+    private void idloadMgKi(JTextField jText) throws ClassNotFoundException, SQLException {
+        //Haetaan viimeisin vapaana oleva ID
+        ResultSet rset = dbMgki.getData("select max(IDMANGAKIRJASTO) from MgKirjasto");
+        while (rset.next()) {
+            int i = rset.getInt(1);
+            i = i + 1;
+            jText.setText(String.valueOf(i));
+        }
+    }
+
 }

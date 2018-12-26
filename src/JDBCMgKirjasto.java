@@ -20,18 +20,24 @@ public class JDBCMgKirjasto {
     String url = "jdbc:sqlite:MgKirjasto.db";
     
     Connection getConnection() throws ClassNotFoundException, SQLException {
+        System.out.println("JDBCMgKirjasto");
         Class.forName(driver);
         Connection con = DriverManager.getConnection(url);
         con.setAutoCommit(true);
+        System.out.println("JDBCMgKirjasto get connection");
         return con;
     }
     
     void putData(String sql) throws ClassNotFoundException, SQLException {
-        Connection con = getConnection();
+       System.out.println("JDBCMgKirjasto putData1"); 
+       Connection con = getConnection();
+       System.out.println("JDBCMgKirjasto putData2");
         Statement state = con.createStatement();
+        System.out.println("JDBCMgKirjasto putData3");
         state.executeUpdate(sql);
+        System.out.println("JDBCMgKirjasto putData4");
         state.close();
-       
+       System.out.println("JDBCMgKirjasto putData5");
     }
     
     public Statement state;
@@ -39,6 +45,7 @@ public class JDBCMgKirjasto {
         Connection con = getConnection();
         state = con.createStatement();
         ResultSet rset = state.executeQuery(sql);
+        System.out.println("JDBCMgKirjasto getData");
         return rset;
     }
 }

@@ -1,3 +1,8 @@
+
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -58,7 +63,13 @@ public class Etusivu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btMangaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMangaActionPerformed
-         new MangaValikko().setVisible(true);
+        try {
+            new MangaValikko().setVisible(true);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Etusivu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Etusivu.class.getName()).log(Level.SEVERE, null, ex);
+        }
             this.setVisible(false);
     }//GEN-LAST:event_btMangaActionPerformed
 
