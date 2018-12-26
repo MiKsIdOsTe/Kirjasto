@@ -134,7 +134,7 @@ public class MangaValikko extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel2)
@@ -155,14 +155,14 @@ public class MangaValikko extends javax.swing.JFrame {
                     .addComponent(KenttaMgTekija)
                     .addComponent(KenttaMgNimi)
                     .addComponent(KenttaIDKirjasto))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 245, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 736, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(92, Short.MAX_VALUE)
+                .addContainerGap(94, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
@@ -354,6 +354,7 @@ public class MangaValikko extends javax.swing.JFrame {
         KenttaMgNro.setText(null);
     }
 
+    
     private void tableload(JTable jt) throws ClassNotFoundException, SQLException {
         DefaultTableModel dt = (DefaultTableModel) jt.getModel();
         //Asetetaan rivit aloittamaan 0
@@ -372,6 +373,7 @@ public class MangaValikko extends javax.swing.JFrame {
             dt.addRow(v);
         }
     }
+    
 
     private void idloadMgKi(JTextField jText) throws ClassNotFoundException, SQLException {
         //Haetaan viimeisin vapaana oleva ID
